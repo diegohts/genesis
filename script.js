@@ -1,3 +1,12 @@
+const audio = [
+    new Audio('assets/greenSound.mp3')
+    , new Audio('assets/redSound.mp3')
+    , new Audio('assets/yellowSound.mp3')
+    , new Audio('assets/blueSound.mp3')
+];
+
+const audioError = new Audio('assets/errorSound.mp3');
+
 let order = [];
 let clickedOrder = [];
 let score = 0;
@@ -20,20 +29,21 @@ let shuffleOrder = () => {
 
     for(let i in order){
         let elementColor = createColorElement(order[i]);
-        lightColor(elementColor, Number(i) + 1);
+        lightColor(elementColor, Number(i) + 1, order[i]);
     }
 }
 
 // Acende a proxima cor
-let lightColor = (element, time) => {
-    time *= 500;
+let lightColor = (element, number, color) => {
+    number *= 600;
     setTimeout(() => {
+        audio[color].play();
         element.classList.add('selected');
-    }, time - 250);
+    }, number - 400);
 
     setTimeout(() => {
         element.classList.remove('selected')
-    });
+    }, number);
 }
 
 // Checa se os botoes clicados sao os mesmos da ordem gerada no jogo
@@ -46,7 +56,8 @@ let checkOrder = () => {
     }
 
     if(clickedOrder.length == order.length){
-        alert(`Pontuação: ${score}\nVocê acertou! Iniciando próximo nível!`);
+        alert(`Pontuação: ${score}
+                \nVocê acertou! Iniciando próximo nível!`);
         nextLevel();
     }
 }
@@ -55,6 +66,7 @@ let checkOrder = () => {
 let click = (color) => {
     clickedOrder[clickedOrder.length] = color;
     createColorElement(color).classList.add('selected');
+    audio[color].play();
 
     setTimeout(() => {
         createColorElement(color).classList.remove('selected');
@@ -83,6 +95,7 @@ let nextLevel = () => {
 
 // Funcao para game over
 let gameOver = () => {
+    audioError.play();
     alert(`Pontuação: ${score}!
             \nVocê perdeu o jogo!
             \nClique em OK para iniciar um novo jogo`);
@@ -94,7 +107,9 @@ let gameOver = () => {
 
 // Funcao para iniciar um jogo
 let playGame = () => {
-    alert('Bem vindo ao Gêneis! Iniciando novo jogo');
+    alert('Bem vindo ao Gênesis! Iniciando novo jogo');
+    order = [];
+    clickedOrder = [];
     score = 0;
 
     nextLevel();
@@ -106,5 +121,4 @@ red.onclick = () => click(1);
 yellow.onclick = () => click(2);
 blue.onclick = () => click(3);
 
-// Inicio do jogo
-playGame();
+playGame(); 
