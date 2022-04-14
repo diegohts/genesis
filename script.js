@@ -21,6 +21,8 @@ const red = document.querySelector('.red');
 const yellow = document.querySelector('.yellow');
 const blue = document.querySelector('.blue');
 
+const playButton = document.querySelector('#play');
+
 // Cria ordem aleatoria de cores.
 let shuffleOrder = () => {
     let colorOrder = Math.floor(Math.random() * 4);
@@ -74,16 +76,28 @@ let click = (color) => {
     }, 250);
 }
 
+let control = (control) => {
+    switch (control) {
+        case 'play':
+            playGame();
+            break;
+        default:
+            alert('Um erro ocorreu, o game será recarregado!');
+            location.reload(true);
+    }
+}
+
 // Funcao que retorna a cor
 let createColorElement = (color) => {
-    if(color == 0){
-        return green;
-    } else if(color == 1){
-        return red;
-    } else if(color == 2){
-        return yellow;
-    } else if(color == 3){
-        return blue;
+    switch (color) {
+        case 0: return green;
+        case 1: return red;
+        case 2: return yellow;
+        case 3: return blue;
+        default: 
+            alert('Um erro ocorreu, o game será recarregado!');
+            location.reload(true);
+            return;
     }
 }
 
@@ -99,10 +113,6 @@ let gameOver = () => {
     alert(`Pontuação: ${score}!
             \nVocê perdeu o jogo!
             \nClique em OK para iniciar um novo jogo`);
-    order = [];
-    clickedOrder = [];
-
-    playGame();
 }
 
 // Funcao para iniciar um jogo
@@ -121,4 +131,4 @@ red.onclick = () => click(1);
 yellow.onclick = () => click(2);
 blue.onclick = () => click(3);
 
-playGame(); 
+playButton.onclick = () => control('play');
