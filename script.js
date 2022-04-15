@@ -10,6 +10,7 @@ const audioError = new Audio('assets/errorSound.mp3');
 let order = [];
 let clickedOrder = [];
 let score = 0;
+let record = localStorage.getItem('record');
 
 //0 - verde
 //1 - vermelho
@@ -22,6 +23,7 @@ const yellow = document.querySelector('.yellow');
 const blue = document.querySelector('.blue');
 
 const playButton = document.querySelector('#play');
+const resetRecord = document.querySelector('#reset');
 
 // Cria ordem aleatoria de cores.
 let shuffleOrder = () => {
@@ -60,6 +62,7 @@ let checkOrder = () => {
     if(clickedOrder.length == order.length){
         alert(`Pontuação: ${score}
                 \nVocê acertou! Iniciando próximo nível!`);
+        updateRecord();        
         nextLevel();
     }
 }
@@ -81,6 +84,10 @@ let control = (control) => {
         case 'play':
             playGame();
             break;
+        case 'reset':
+            localStorage.clear();
+            updateRecord();
+            break;    
         default:
             alert('Um erro ocorreu, o game será recarregado!');
             location.reload(true);
@@ -110,9 +117,11 @@ let nextLevel = () => {
 // Funcao para game over
 let gameOver = () => {
     audioError.play();
-    alert(`Pontuação: ${score}!
-            \nVocê perdeu o jogo!
-            \nClique em OK para iniciar um novo jogo`);
+    alert(`Você perdeu o jogo!
+            \nPontuação: ${score}!
+            \nSeu Recorde: ${record}!
+            \nClique em OK para iniciar um novo jogo.`
+    );
 }
 
 // Funcao para iniciar um jogo
@@ -125,6 +134,12 @@ let playGame = () => {
     nextLevel();
 }
 
+//atualizar o Recorde
+let updateRecord = () => {
+    if(score > record) localStorage.setItem('record', score);
+    document.getElementById('record').innerHTML = (record) ? record : 0;
+}
+
 // Eventos de clique para as cores
 green.onclick = () => click(0);
 red.onclick = () => click(1);
@@ -132,3 +147,7 @@ yellow.onclick = () => click(2);
 blue.onclick = () => click(3);
 
 playButton.onclick = () => control('play');
+resetRecord.onclick = () => control('reset');
+
+//Evento ao carregar a página
+updateRecord();
